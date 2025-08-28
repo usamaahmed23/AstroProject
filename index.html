@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatty</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="paper-background">
+            <div class="messages-container" id="messagesContainer">
+                <!-- Messages will appear here -->
+            </div>
+            
+            <div class="input-section">
+                <div class="input-container">
+                    <input type="text" id="messageInput" placeholder="Type your message..." class="message-input">
+                    <button id="sendButton" class="send-button">Send</button>
+                </div>
+                <button id="resetButton" class="reset-button">Reset Chat</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        class ChatInterface {
+            constructor() {
+                this.messagesContainer = document.getElementById('messagesContainer');
+                this.messageInput = document.getElementById('messageInput');
+                this.sendButton = document.getElementById('sendButton');
+                this.resetButton = document.getElementById('resetButton');
+                
+                this.init();
+            }
+            
+            init() {
+                this.sendButton.addEventListener('click', () => this.sendMessage());
+                this.resetButton.addEventListener('click', () => this.resetChat());
+                
+                this.messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.sendMessage();
+                    }
+                });
+                
+                this.messageInput.addEventListener('input', () => {
+                    this.sendButton.disabled = this.messageInput.value.trim().length === 0;
+                });
+                
+                // Initial state
+                this.sendButton.disabled = true;
+                this.addWelcomeMessage();
+            }
+            
+            addWelcomeMessage() {
+                this.addMessage("Hello! I'm here to help. Type a message to get started.", 'assistant');
+            }
+            
+            sendMessage() {
+                const message = this.messageInput.value.trim();
+                if (!message) return;
+                
+                // Add user message
+                this.addMessage(message, 'user');
+                
+                // Clear input
+                this.messageInput.value = '';
+                this.sendButton.disabled = true;
+                
+                // Simulate assistant response
+                setTimeout(() => {
+                    this.addAssistantResponse(message);
+                }, 500);
+            }
+            
+            addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                messageDiv.textContent = text;
+                
+                this.messagesContainer.appendChild(messageDiv);
+                this.scrollToBottom();
+            }
+            
+            addAssistantResponse(userMessage) {
+                // Simple response logic - in a real app, this would connect to an AI service
+                const responses = [
+                    "That's interesting! Tell me more about that.",
+                    "I understand. How can I help you with that?",
+                    "Thanks for sharing! What would you like to know?",
+                    "I see what you mean. Let me think about that.",
+                    "That's a great question! Here's what I think...",
+                    "I appreciate you asking. Let me help you with that.",
+                    "Interesting perspective! What else would you like to discuss?"
+                ];
+                
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                this.addMessage(randomResponse, 'assistant');
+            }
+            
+            resetChat() {
+                this.messagesContainer.innerHTML = '';
+                this.messageInput.value = '';
+                this.sendButton.disabled = true;
+                
+                // Add welcome message after a brief delay
+                setTimeout(() => {
+                    this.addWelcomeMessage();
+                }, 200);
+            }
+            
+            scrollToBottom() {
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+            }
+        }
+
+        // Initialize the chat interface when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new ChatInterface();
+        });
+    </script>
+</body>
+</html>
