@@ -1,0 +1,11 @@
+{
+    "name": "chatty",
+    "version": "1.0.0",
+    "description": "A chat interface with vanilla JavaScript",
+    "main": "index.js",
+    "scripts": {
+        "start": "open index.html"
+    },
+    "dependencies": {},
+    "devDependencies": {}
+}
