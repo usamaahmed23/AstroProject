@@ -7,5 +7,28 @@ export default defineConfig({
   integrations: [
     tailwind(),
     sitemap()
-  ]
+  ],
+  build: {
+    // Optimize build output
+    inlineStylesheets: 'auto',
+  },
+  vite: {
+    build: {
+      // Optimize chunk splitting for better loading
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['astro']
+          }
+        }
+      },
+      // Reduce bundle size
+      minify: 'terser',
+      cssMinify: true
+    },
+    // Optimize development
+    optimizeDeps: {
+      include: ['astro']
+    }
+  }
 });
