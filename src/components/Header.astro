@@ -32,8 +32,17 @@ const links = [
 
 <script>
   const themeToggle = document.getElementById('theme-toggle');
+  
+  // Debounced theme toggle with RAF for smoother performance
+  let toggleTimeout: number | null = null;
+  
   themeToggle?.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.theme = isDark ? 'dark' : 'light';
+    if (toggleTimeout) return; // Prevent rapid clicking
+    
+    toggleTimeout = window.requestAnimationFrame(() => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.theme = isDark ? 'dark' : 'light';
+      toggleTimeout = null;
+    });
   });
 </script>
